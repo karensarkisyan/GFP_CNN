@@ -1,8 +1,8 @@
-input_file	~/Lab/CRG/Research/Fitness/ubi.tsv
-output_folder	~/8_02_17_test/
+input_file	~/Lab/CRG/Research/GFP/data/amino_acid_genotypes_to_brightness_short.txt
+output_folder	13_2_17_GFP/
 learning_rate	0.1
-batch_size	628
+batch_size	100
 reshuffling_frequency	500
-number_of_iterations	100000
+number_of_iterations	1000
 optimizer	tf.train.AdagradOptimizer
 net_structure	1,tf.tanh	3,tf.tanh	1,tf.tanh

@@ -16,7 +16,6 @@ class Data():
         data = pd.read_table(input_file)
         data.aaMutations = data.aaMutations.fillna('')
         unique_mutations = set(':'.join(data.aaMutations).split(':'))
-        unique_mutations.remove('')
         unique_mutations = sorted(list(unique_mutations))
         self.data = data
         self.unique_mutations = unique_mutations
@@ -72,10 +71,14 @@ class TFNet(object):
                 broadcast(self.biases[layer], batch_size))
             self.output[layer] = eval(self.structure[layer][1])(self.input[layer])
 
+        weights = [(self.weights[x]) for x in ['layer1', 'layer2', 'layer3']]
+        regularizer = tf.contrib.layers.l1_regularizer(0.01)
+
         self.cost = tf.reduce_sum(tf.pow(self.output[layer] - input_data.nn_brightness, 2)) / batch_size
+        self.cost = tf.reduce_mean(self.cost + tf.contrib.layers.apply_regularization(regularizer, weights))
         self.optimizer = eval(optimizer_method)(learning_rate).minimize(self.cost)
 
-        self.init = tf.initialize_all_variables()
+        self.init = tf.global_variables_initializer()
         self.saver = tf.train.Saver()
 
         self.cost_stats_file = cost_stats_file

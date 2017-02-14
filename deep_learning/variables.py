@@ -1,9 +1,9 @@
 import matplotlib
 matplotlib.use('Agg')
 import argparse
-import boto3
-
-s3 = boto3.resource('s3')
+# import boto3
+#
+# s3 = boto3.resource('s3')
 
 parser = argparse.ArgumentParser(description='''
 
@@ -85,6 +85,4 @@ if output_folder[-1] != '/':
 # Help dummy files that will be generated locally, before sending to s3. They'll be overwritten each iteration.
 cost_stats_file = output_folder + 'cost_stats.txt'
 temp_fig_file = output_folder + 'temp_fig.png'
-temp_model_ckpt_file = output_folder + 'model.ckpt'
-
-
+temp_model_ckpt_file = output_folder + 'model.ckpt.meta'
