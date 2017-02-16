@@ -71,3 +71,14 @@ def get_batches(nn_genotypes_values, nn_brightness_values, batch_size, unique_mu
 # Function for broadcasting a tensor (used before multiplication with weights).
 def broadcast(tensor, batch_size):
     return tf.tile(tensor, (batch_size, 1, 1))
+
+
+# Train set/Test set data splitting
+def train_test_split(data, batch_size):
+    data.nn_genotypes_test, data.nn_brightness_test = \
+        data.nn_genotypes_values[:batch_size], data.nn_brightness_values[:batch_size]
+
+    data.nn_genotypes_train, data.nn_brightness_train = \
+        data.nn_genotypes_values[batch_size:], data.nn_brightness_values[batch_size:]
+
+    return data.nn_genotypes_test, data.nn_brightness_test, data.nn_genotypes_train, data.nn_brightness_train
