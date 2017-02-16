@@ -1,4 +1,5 @@
 import matplotlib
+
 matplotlib.use('Agg')
 from classes import *
 from variables import *
@@ -6,6 +7,7 @@ import pandas as pd
 import tensorflow as tf
 import numpy as np
 from matplotlib import pyplot as plt
+from sklearn.metrics import explained_variance_score
 
 print('Folder name for this run is %s' % output_folder)
 print('# learning rate = %s' % learning_rate)
@@ -50,6 +52,10 @@ with tf.Session() as sess:
             figure_name += '_iteration_%05d' % e
 
             costs = 0
+
+            # train data prediction
+            train_score = []
+
             for index, (batch, batch_brightness) in enumerate(data.batches):
                 cost_value, l3_value = sess.run([net.cost, net.output['layer3']],
                                                 feed_dict={data.nn_genotypes: batch,
@@ -57,17 +63,34 @@ with tf.Session() as sess:
                 costs += cost_value
 
                 to_plot_predicted[(index * batch_size):((index + 1) * batch_size)] = l3_value.reshape(batch_size)
+                train_score.append(
+                    explained_variance_score(l3_value.reshape(batch_size), batch_brightness.reshape(batch_size)))
 
             costs /= data.batch_number
+
+            train_score = np.median(train_score)
+            print('Train explained variance score is %.2f' % train_score)
+
+            # test data prediction
+            for index, (batch, batch_brightness) in enumerate(data.test_batches):
+                test_l3_value = sess.run([net.output['layer3']],
+                                         feed_dict={data.nn_genotypes: batch,
+                                                    data.nn_brightness: batch_brightness})
+
+                test_values = test_l3_value
+
+                test_score = explained_variance_score(test_values[0].reshape(batch_size),
+                                                      batch_brightness.reshape(batch_size))
+
+            print('Test explained variance score is %.2f' % test_score)
 
             # Plotting observed versus predicted brightness. Saving the plot locally to a temp_fig_file.
             print('Iteration %s: cost=%.7f' % (e, costs))
 
             cost_stats.write('%s,%s\n' % (e, costs))
-            density_plot(data.to_plot_observed, to_plot_predicted, e, costs)
+            density_plot(data.to_plot_observed, to_plot_predicted, e, costs, test_score)
             plt.savefig(figure_name)
             plt.close('all')
-
 
             # Saving ckpt file and sending it and figure file to s3://landscapes-tensorflow.
             net.saver.save(sess, temp_model_ckpt_file)

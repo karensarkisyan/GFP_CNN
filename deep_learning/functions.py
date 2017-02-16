@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from scipy.stats import gaussian_kde
 
 # Functions for plotting. The first is to actually plot, the second is to make the plot readable.
-def density_plot(x, y, iteration_number, costs):
+def density_plot(x, y, iteration_number, costs, test_score):
     ''' x = observed, y = predicted '''
     x = x[(~np.isnan(x)) & (~np.isnan(y))]
     y = y[(~np.isnan(x)) & (~np.isnan(y))]
@@ -26,7 +26,7 @@ def density_plot(x, y, iteration_number, costs):
     plt.ylim(-1, 1)
     plt.xlabel('Observed brightness')
     plt.ylabel('Predicted brightness')
-    plt.title('Iteration %s: cost=%.7f' % (iteration_number, costs))
+    plt.title('Iteration %s: cost=%.7f, test EVS=%.2f' % (iteration_number, costs, test_score))
     plt.tick_params(axis="both", which="both", bottom="off", top="off",
                     labelbottom="on", left="off", right="off", labelleft="on")
     plt.gca().spines["top"].set_visible(False)
