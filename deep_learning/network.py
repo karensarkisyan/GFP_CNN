@@ -62,9 +62,8 @@ with tf.Session() as sess:
 
             # Plotting observed versus predicted brightness. Saving the plot locally to a temp_fig_file.
             print('Iteration %s: cost=%.7f' % (e, costs))
+
             cost_stats.write('%s,%s\n' % (e, costs))
-            fig = plt.figure(figsize=(6, 6))
-            ax = plt.subplot(111)
             density_plot(data.to_plot_observed, to_plot_predicted, e, costs)
             plt.savefig(figure_name)
             plt.close('all')

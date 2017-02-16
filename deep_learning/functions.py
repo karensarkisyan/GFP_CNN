@@ -39,7 +39,7 @@ def density_plot(x, y, iteration_number, costs):
 
 # Function for shaping the data. It performs reshuffling of the data,
 # brightness normalization, and extracts genotype and brightness to separate matrices.
-def format_data(data, unique_mutations):
+def format_data(data, unique_mutations, batch_size):
     # shuffling rows in the data df
     data = data.reindex(np.random.permutation(data.index))
     print('Normalizing data...')
@@ -51,7 +51,13 @@ def format_data(data, unique_mutations):
 
     nn_brightness_values = (nn_brightness_values - min(nn_brightness_values)) / max(
         nn_brightness_values - min(nn_brightness_values)) * 2 - 1
-    return nn_genotypes_values, nn_brightness_values
+
+    data.nn_genotypes_test, data.nn_brightness_test = \
+        nn_genotypes_values[:batch_size], nn_brightness_values[:batch_size]
+    data.nn_genotypes_train, data.nn_brightness_train = \
+        nn_genotypes_values[batch_size:], nn_brightness_values[batch_size:]
+
+    return data.nn_genotypes_test, data.nn_brightness_test, data.nn_genotypes_train, data.nn_brightness_train
 
 
 # Function for generating batches from the data.
@@ -71,14 +77,3 @@ def get_batches(nn_genotypes_values, nn_brightness_values, batch_size, unique_mu
 # Function for broadcasting a tensor (used before multiplication with weights).
 def broadcast(tensor, batch_size):
     return tf.tile(tensor, (batch_size, 1, 1))
-
-
-# Train set/Test set data splitting
-def train_test_split(data, batch_size):
-    data.nn_genotypes_test, data.nn_brightness_test = \
-        data.nn_genotypes_values[:batch_size], data.nn_brightness_values[:batch_size]
-
-    data.nn_genotypes_train, data.nn_brightness_train = \
-        data.nn_genotypes_values[batch_size:], data.nn_brightness_values[batch_size:]
-
-    return data.nn_genotypes_test, data.nn_brightness_test, data.nn_genotypes_train, data.nn_brightness_train

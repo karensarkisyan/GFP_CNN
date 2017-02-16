@@ -21,17 +21,24 @@ class Data():
         self.unique_mutations = unique_mutations
         self.batch_size = batch_size
         self.input_file = input_file
-        self.nn_genotypes_values, self.nn_brightness_values = format_data(data, unique_mutations)
-        self.batches = get_batches(self.nn_genotypes_values, self.nn_brightness_values, batch_size, unique_mutations)
+
+        self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
+            format_data(self.data, self.unique_mutations, self.batch_size)
+
+        self.batches = get_batches(self.nn_genotypes_train, self.nn_brightness_train,
+                                   self.batch_size, self.unique_mutations)
         self.batch_number = len(self.batches)
-        self.to_plot_observed = self.nn_brightness_values[0:(self.batch_number * self.batch_size)]
+        self.to_plot_observed = self.nn_brightness_train[0:(self.batch_number * self.batch_size)]
         self.nn_genotypes = tf.placeholder(tf.float32, shape=[self.batch_size, 1, len(unique_mutations)])
         self.nn_brightness = tf.placeholder(tf.float32, shape=[self.batch_size, 1, 1])
 
     def reshuffle(self):
-        self.nn_genotypes_values, self.nn_brightness_values = format_data(self.data, self.unique_mutations)
-        self.batches = get_batches(self.nn_genotypes_values, self.nn_brightness_values, self.batch_size, self.unique_mutations)
-        self.to_plot_observed = self.nn_brightness_values[0:(self.batch_number * self.batch_size)]
+        self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
+            format_data(self.data, self.unique_mutations, self.batch_size)
+
+        self.batches = get_batches(self.nn_genotypes_train, self.nn_brightness_train,
+                                   self.batch_size, self.unique_mutations)
+        self.to_plot_observed = self.nn_brightness_train[0:(self.batch_number * self.batch_size)]
 
 
 # Neural network class. Extracts neural net structure from the parameter file.
@@ -72,7 +79,7 @@ class TFNet(object):
             self.output[layer] = eval(self.structure[layer][1])(self.input[layer])
 
         weights = [(self.weights[x]) for x in ['layer1', 'layer2', 'layer3']]
-        regularizer = tf.contrib.layers.l2_regularizer(0.01)
+        regularizer = tf.contrib.layers.l2_regularizer(0.001)
 
         self.cost = tf.reduce_sum(tf.pow(self.output[layer] - input_data.nn_brightness, 2)) / batch_size
         self.cost = tf.reduce_mean(self.cost + tf.contrib.layers.apply_regularization(regularizer, weights))
