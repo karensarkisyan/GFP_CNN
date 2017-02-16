@@ -65,10 +65,10 @@ with tf.Session() as sess:
             cost_stats.write('%s,%s\n' % (e, costs))
             fig = plt.figure(figsize=(6, 6))
             ax = plt.subplot(111)
-            density_plot(data.to_plot_observed, to_plot_predicted)
-            format_plot(ax, e, costs)
+            density_plot(data.to_plot_observed, to_plot_predicted, e, costs)
             plt.savefig(figure_name)
             plt.close('all')
+
 
             # Saving ckpt file and sending it and figure file to s3://landscapes-tensorflow.
             net.saver.save(sess, temp_model_ckpt_file)

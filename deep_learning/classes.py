@@ -72,7 +72,7 @@ class TFNet(object):
             self.output[layer] = eval(self.structure[layer][1])(self.input[layer])
 
         weights = [(self.weights[x]) for x in ['layer1', 'layer2', 'layer3']]
-        regularizer = tf.contrib.layers.l1_regularizer(0.01)
+        regularizer = tf.contrib.layers.l2_regularizer(0.01)
 
         self.cost = tf.reduce_sum(tf.pow(self.output[layer] - input_data.nn_brightness, 2)) / batch_size
         self.cost = tf.reduce_mean(self.cost + tf.contrib.layers.apply_regularization(regularizer, weights))

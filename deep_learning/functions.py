@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from scipy.stats import gaussian_kde
 
 # Functions for plotting. The first is to actually plot, the second is to make the plot readable.
-def density_plot(x, y):
+def density_plot(x, y, iteration_number, costs):
     ''' x = observed, y = predicted '''
     x = x[(~np.isnan(x)) & (~np.isnan(y))]
     y = y[(~np.isnan(x)) & (~np.isnan(y))]
@@ -19,28 +19,22 @@ def density_plot(x, y):
     idx = z.argsort()
     x, y, z = x[idx], y[idx], z[idx]
 
-    fig, ax = plt.subplots()
-    ax.scatter(x, y, c=z, s=10, edgecolor='')
-
-
-def format_plot(ax, iteration_number, costs):
+    # formatting
+    plt.figure(figsize=[10,6])
+    plt.scatter(x, y, c=z, s=7, edgecolor='', cmap = 'gray_r')
     plt.xlim(-1, 1)
     plt.ylim(-1, 1)
     plt.xlabel('Observed brightness')
     plt.ylabel('Predicted brightness')
     plt.title('Iteration %s: cost=%.7f' % (iteration_number, costs))
-
     plt.tick_params(axis="both", which="both", bottom="off", top="off",
                     labelbottom="on", left="off", right="off", labelleft="on")
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["bottom"].set_visible(True)
-    ax.spines["bottom"].set_color('gray')
-    ax.spines["left"].set_visible(True)
-    ax.spines["left"].set_color('gray')
-    ax.xaxis.grid(True)
-    ax.yaxis.grid(True)
-    return ax
+    plt.gca().spines["top"].set_visible(False)
+    plt.gca().spines["right"].set_visible(False)
+    plt.gca().spines["bottom"].set_color('gray')
+    plt.gca().spines["left"].set_color('gray')
+    plt.gca().xaxis.grid(True)
+    plt.gca().yaxis.grid(True)
 
 
 # Function for shaping the data. It performs reshuffling of the data,
