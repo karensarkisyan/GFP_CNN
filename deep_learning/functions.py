@@ -21,7 +21,7 @@ def density_plot(x, y, iteration_number, costs, test_score):
 
     # formatting
     plt.figure(figsize=[10,6])
-    plt.scatter(x, y, c=z, s=7, edgecolor='', cmap = 'gray_r')
+    plt.scatter(x, y, c=z, s=7, edgecolor='', cmap = 'viridis_r')
     plt.xlim(-1, 1)
     plt.ylim(-1, 1)
     plt.xlabel('Observed brightness')

@@ -17,6 +17,8 @@ class Data():
         data.aaMutations = data.aaMutations.fillna('')
         unique_mutations = set(':'.join(data.aaMutations).split(':'))
         unique_mutations = sorted(list(unique_mutations))
+        unique_mutations.remove('')
+
         self.data = data
         self.unique_mutations = unique_mutations
         self.batch_size = batch_size
