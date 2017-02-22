@@ -8,9 +8,10 @@ from scipy.stats import gaussian_kde
 
 
 # Format data, split into feature matrix and target value vector
-def format_data(data, unique_mutations):
+def format_data(data):
     # shuffling rows in the data df
-    data = data.reindex(np.random.permutation(data.index))
+    unique_mutations = data.unique_mutations
+    data = data.data.reindex(np.random.permutation(data.data.index))
 
     # formatting data for the nn input
     print('Normalizing data...')

@@ -25,8 +25,7 @@ class Data():
         self.input_file = input_file
         self.batch_number = int(len(self.data) / self.batch_size)
 
-        self.nn_genotypes_values, self.nn_brightness_values = \
-            format_data(self.data, self.unique_mutations, self.batch_size)
+        self.nn_genotypes_values, self.nn_brightness_values = format_data(self)
 
         self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
             split(self)
