@@ -83,7 +83,7 @@ class TFNet(object):
         regularizer = tf.contrib.layers.l2_regularizer(0.001)
 
         self.cost = tf.reduce_sum(tf.pow(self.output[layer] - input_data.nn_brightness, 2)) / batch_size
-        self.cost = tf.reduce_mean(self.cost + tf.contrib.layers.apply_regularization(regularizer, weights))
+        # self.cost = tf.reduce_mean(self.cost + tf.contrib.layers.apply_regularization(regularizer, weights))
         self.optimizer = eval(optimizer_method)(learning_rate).minimize(self.cost)
 
         self.init = tf.global_variables_initializer()

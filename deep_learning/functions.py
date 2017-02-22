@@ -30,7 +30,7 @@ def format_data(data):
 def split(data):
     length = len(data.data)
     test_id = np.random.randint(0, length, data.batch_size)
-    train_id = np.array([x for i, x in enumerate(np.arange(length)) if i not in test_id])
+    train_id = np.array([x for x in np.arange(length) if x not in test_id])
 
     genotypes_test, genotypes_train = data.nn_genotypes_values[test_id], data.nn_genotypes_values[train_id]
     brightness_test, brightness_train = data.nn_brightness_values[test_id], data.nn_brightness_values[train_id]
@@ -66,7 +66,7 @@ def broadcast(tensor, batch_size):
 
 
 # Plot the observed values versus predicted using density plot
-def density_plot(x, y, iteration_number, costs):
+def density_plot(x, y, iteration_number, costs, test_score):
     ''' x = observed, y = predicted '''
     x = x[(~np.isnan(x)) & (~np.isnan(y))]
     y = y[(~np.isnan(x)) & (~np.isnan(y))]
@@ -80,13 +80,13 @@ def density_plot(x, y, iteration_number, costs):
     x, y, z = x[idx], y[idx], z[idx]
 
     # formatting
-    plt.figure(figsize=[10, 6])
-    plt.scatter(x, y, c=z, s=7, edgecolor='', cmap='viridis_r')
+    plt.figure(figsize=[6, 4])
+    plt.scatter(x, y, c=z, s=3, edgecolor='', cmap='viridis_r')
     plt.xlim(-1, 1)
     plt.ylim(-1, 1)
     plt.xlabel('Observed brightness')
     plt.ylabel('Predicted brightness')
-    plt.title('Iteration %s: cost=%.7f' % (iteration_number, costs))
+    plt.title('Iteration %s: cost=%.7f, EVS=%.2f' % (iteration_number, costs, test_score))
     plt.tick_params(axis="both", which="both", bottom="off", top="off",
                     labelbottom="on", left="off", right="off", labelleft="on")
     plt.gca().spines["top"].set_visible(False)
