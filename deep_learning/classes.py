@@ -23,29 +23,24 @@ class Data():
         self.unique_mutations = unique_mutations
         self.batch_size = batch_size
         self.input_file = input_file
+        self.batch_number = int(len(self.data) / self.batch_size)
 
-        self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
+        self.nn_genotypes_values, self.nn_brightness_values = \
             format_data(self.data, self.unique_mutations, self.batch_size)
 
-        self.batches = get_batches(self.nn_genotypes_train, self.nn_brightness_train,
-                                   self.batch_size, self.unique_mutations)
-        self.test_batches = get_batches(self.nn_genotypes_test, self.nn_brightness_test, self.batch_size,
-                                        self.unique_mutations)
+        self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
+            split(self)
 
-        self.batch_number = len(self.batches)
+        self.batches, self.test_batches = get_batches(self)
+
         self.to_plot_observed = self.nn_brightness_train[0:(self.batch_number * self.batch_size)]
         self.nn_genotypes = tf.placeholder(tf.float32, shape=[self.batch_size, 1, len(unique_mutations)])
         self.nn_brightness = tf.placeholder(tf.float32, shape=[self.batch_size, 1, 1])
 
     def reshuffle(self):
         self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
-            format_data(self.data, self.unique_mutations, self.batch_size)
-
-        self.batches = get_batches(self.nn_genotypes_train, self.nn_brightness_train,
-                                   self.batch_size, self.unique_mutations)
-        self.test_batches = get_batches(self.nn_genotypes_test, self.nn_brightness_test, self.batch_size,
-                                        self.unique_mutations)
-        self.to_plot_observed = self.nn_brightness_train[0:(self.batch_number * self.batch_size)]
+            split(self)
+        self.batches, self.test_batches = get_batches(self)
 
 
 # Neural network class. Extracts neural net structure from the parameter file.
