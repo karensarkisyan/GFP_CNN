@@ -44,6 +44,7 @@ def get_batches(data):
     batches = []
     test_batches = []
     ids = np.array([x for x in np.arange(length)])
+    to_plot_observed = []
 
     for i in range(data.batch_number):
         current_ids = np.random.choice(ids, data.batch_size, replace=False)
@@ -51,13 +52,15 @@ def get_batches(data):
 
         current_batch = data.nn_genotypes_train[current_ids].reshape(data.batch_size, 1, len(data.unique_mutations))
         current_batch_brightness = data.nn_brightness_train[current_ids].reshape(data.batch_size, 1, 1)
+        to_plot_observed.append(data.nn_brightness_train[current_ids])
         batches.append((current_batch, current_batch_brightness))
 
     test_batch = data.nn_genotypes_test.reshape(data.batch_size, 1, len(data.unique_mutations))
     test_batch_brightness = data.nn_brightness_test.reshape(data.batch_size, 1, 1)
     test_batches.append((test_batch, test_batch_brightness))
+    to_plot_observed = np.array(to_plot_observed).reshape(data.batch_number * data.batch_size)
 
-    return batches, test_batches
+    return batches, test_batches, to_plot_observed
 
 
 # Broadcast a tensor (used before multiplication with weights)

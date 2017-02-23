@@ -30,16 +30,15 @@ class Data():
         self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
             split(self)
 
-        self.batches, self.test_batches = get_batches(self)
+        self.batches, self.test_batches, self.to_plot_observed = get_batches(self)
 
-        self.to_plot_observed = self.nn_brightness_train[0:(self.batch_number * self.batch_size)]
         self.nn_genotypes = tf.placeholder(tf.float32, shape=[self.batch_size, 1, len(unique_mutations)])
         self.nn_brightness = tf.placeholder(tf.float32, shape=[self.batch_size, 1, 1])
 
     def reshuffle(self):
         self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
             split(self)
-        self.batches, self.test_batches = get_batches(self)
+        self.batches, self.test_batches, self.to_plot_observed = get_batches(self)
 
 
 # Neural network class. Extracts neural net structure from the parameter file.
@@ -83,7 +82,7 @@ class TFNet(object):
         regularizer = tf.contrib.layers.l2_regularizer(0.001)
 
         self.cost = tf.reduce_sum(tf.pow(self.output[layer] - input_data.nn_brightness, 2)) / batch_size
-        # self.cost = tf.reduce_mean(self.cost + tf.contrib.layers.apply_regularization(regularizer, weights))
+        self.cost = tf.reduce_mean(self.cost + tf.contrib.layers.apply_regularization(regularizer, weights))
         self.optimizer = eval(optimizer_method)(learning_rate).minimize(self.cost)
 
         self.init = tf.global_variables_initializer()
