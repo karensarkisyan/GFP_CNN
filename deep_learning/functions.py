@@ -98,3 +98,27 @@ def density_plot(x, y, iteration_number, costs, test_score):
     plt.gca().spines["left"].set_color('gray')
     plt.gca().xaxis.grid(True)
     plt.gca().yaxis.grid(True)
+
+
+# Negative control -- getting random batches, brightness not corresponding to the features
+def get_random_batches(data):
+    length = len(data.nn_brightness_train)
+    batches = []
+    test_batches = []
+    ids = np.array([x for x in np.arange(length)])
+    to_plot_observed = []
+
+    for i in range(data.batch_number):
+        current_batch = data.nn_genotypes_train[np.random.choice(ids, data.batch_size, replace=False)].reshape(
+            data.batch_size, 1, len(data.unique_mutations))
+        current_batch_brightness = data.nn_brightness_train[
+            np.random.choice(ids, data.batch_size, replace=False)].reshape(data.batch_size, 1, 1)
+        to_plot_observed.append(data.nn_brightness_train[np.random.choice(ids, data.batch_size, replace=False)])
+        batches.append((current_batch, current_batch_brightness))
+
+    test_batch = data.nn_genotypes_test.reshape(data.batch_size, 1, len(data.unique_mutations))
+    test_batch_brightness = data.nn_brightness_test.reshape(data.batch_size, 1, 1)
+    test_batches.append((test_batch, test_batch_brightness))
+    to_plot_observed = np.array(to_plot_observed).reshape(data.batch_number * data.batch_size)
+
+    return batches, test_batches, to_plot_observed

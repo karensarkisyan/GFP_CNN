@@ -71,18 +71,20 @@ with tf.Session() as sess:
             train_score = np.median(train_score)
             print('Train explained variance score is %.2f' % train_score)
 
-            # test data prediction
-            for index, (batch, batch_brightness) in enumerate(data.test_batches):
-                test_l3_value = sess.run([net.output['layer3']],
-                                         feed_dict={data.nn_genotypes: batch,
-                                                    data.nn_brightness: batch_brightness})
+            if e % 1000 == 0 and e != 0:
 
-                test_values = test_l3_value
+                # test data prediction
+                for index, (batch, batch_brightness) in enumerate(data.test_batches):
+                    test_l3_value = sess.run([net.output['layer3']],
+                                             feed_dict={data.nn_genotypes: batch,
+                                                        data.nn_brightness: batch_brightness})
 
-                test_score = explained_variance_score(test_values[0].reshape(batch_size),
-                                                      batch_brightness.reshape(batch_size))
+                    test_values = test_l3_value
 
-            print('Test explained variance score is %.2f' % test_score)
+                    test_score = explained_variance_score(test_values[0].reshape(batch_size),
+                                                          batch_brightness.reshape(batch_size))
+
+                print('Test explained variance score is %.2f' % test_score)
 
             # Plotting observed versus predicted brightness. Saving the plot locally to a temp_fig_file.
             print('Iteration %s: cost=%.7f' % (e, costs))

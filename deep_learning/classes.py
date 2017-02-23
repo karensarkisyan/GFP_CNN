@@ -36,8 +36,8 @@ class Data():
         self.nn_brightness = tf.placeholder(tf.float32, shape=[self.batch_size, 1, 1])
 
     def reshuffle(self):
-        self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
-            split(self)
+        # self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
+        #     split(self)
         self.batches, self.test_batches, self.to_plot_observed = get_batches(self)
 
 
