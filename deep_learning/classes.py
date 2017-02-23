@@ -30,7 +30,7 @@ class Data():
         self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
             split(self)
 
-        self.batches, self.test_batches, self.to_plot_observed = get_batches(self)
+        self.batches, self.test_batches, self.to_plot_observed, self.to_plot_observed_test = get_batches(self)
 
         self.nn_genotypes = tf.placeholder(tf.float32, shape=[self.batch_size, 1, len(unique_mutations)])
         self.nn_brightness = tf.placeholder(tf.float32, shape=[self.batch_size, 1, 1])
@@ -38,7 +38,7 @@ class Data():
     def reshuffle(self):
         # self.nn_genotypes_test, self.nn_brightness_test, self.nn_genotypes_train, self.nn_brightness_train = \
         #     split(self)
-        self.batches, self.test_batches, self.to_plot_observed = get_batches(self)
+        self.batches, self.test_batches, self.to_plot_observed, self.to_plot_observed_test = get_batches(self)
 
 
 # Neural network class. Extracts neural net structure from the parameter file.

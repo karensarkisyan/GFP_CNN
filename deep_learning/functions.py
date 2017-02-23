@@ -58,9 +58,10 @@ def get_batches(data):
     test_batch = data.nn_genotypes_test.reshape(data.batch_size, 1, len(data.unique_mutations))
     test_batch_brightness = data.nn_brightness_test.reshape(data.batch_size, 1, 1)
     test_batches.append((test_batch, test_batch_brightness))
+    to_plot_observed_test = data.nn_brightness_test.reshape(data.batch_size)
     to_plot_observed = np.array(to_plot_observed).reshape(data.batch_number * data.batch_size)
 
-    return batches, test_batches, to_plot_observed
+    return batches, test_batches, to_plot_observed, to_plot_observed_test
 
 
 # Broadcast a tensor (used before multiplication with weights)
@@ -119,6 +120,7 @@ def get_random_batches(data):
     test_batch = data.nn_genotypes_test.reshape(data.batch_size, 1, len(data.unique_mutations))
     test_batch_brightness = data.nn_brightness_test.reshape(data.batch_size, 1, 1)
     test_batches.append((test_batch, test_batch_brightness))
+    to_plot_observed_test = data.nn_brightness_test.reshape(data.batch_size)
     to_plot_observed = np.array(to_plot_observed).reshape(data.batch_number * data.batch_size)
 
-    return batches, test_batches, to_plot_observed
+    return batches, test_batches, to_plot_observed, to_plot_observed_test

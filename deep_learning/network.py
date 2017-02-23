@@ -1,5 +1,4 @@
 import matplotlib
-
 matplotlib.use('Agg')
 from classes import *
 from variables import *
@@ -90,7 +89,7 @@ with tf.Session() as sess:
             print('Iteration %s: cost=%.7f' % (e, costs))
 
             cost_stats.write('%s,%s\n' % (e, costs))
-            density_plot(data.to_plot_observed, to_plot_predicted, e, costs, 5)
+            density_plot(data.to_plot_observed, to_plot_predicted, e, costs, train_score)
             plt.savefig(figure_name)
             plt.close('all')
 
