@@ -1,14 +1,8 @@
 import pandas as pd
 import numpy as np
-from matplotlib import pyplot as plt
 import tensorflow as tf
-import time
 import os
-from IPython.display import clear_output
-from sklearn.model_selection import train_test_split
-import matplotlib
-from sklearn.preprocessing import label_binarize
-from tensorflow.contrib.framework.python.ops import add_arg_scope,arg_scope
+from tensorflow.contrib.framework.python.ops import add_arg_scope
 
 
 # In[4]:
@@ -231,7 +225,7 @@ def reset_graph(seed=8):
     np.random.seed(seed)
 
 
-def train_NN(nn_instance, input_data, patience, log_dir):
+def train_NN(nn_instance, input_data, patience, log_dir, NN_id, save_model=True):
     
     print 'Initializing NN'
     
@@ -280,11 +274,14 @@ def train_NN(nn_instance, input_data, patience, log_dir):
 
                 val_mse_hist.append(np.median(temp_val_mse))
 
-                saver.save(sess, os.path.join(log_dir, "model.ckpt"))
+                if save_model:
+                    saver.save(sess, os.path.join(log_dir, "model_"+NN_id+".ckpt"))
 
                 print '%d\t\t\t%.2f\t\t\t%.2f' % (epoch, np.median(temp_train_mse), np.median(temp_val_mse))
 
-            if epoch%patience==0 and epoch!=0:    
+
+            #EARLY STOPPING
+            if epoch%patience==0 and epoch!=0:
                 if min(val_mse_hist[-patience:]) < np.median(temp_val_mse):
                     break
                     

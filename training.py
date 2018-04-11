@@ -1,5 +1,6 @@
 from classes import *
 from collections import OrderedDict
+import time
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
@@ -8,19 +9,17 @@ num_iter=3
 mse_train=[]
 mse_val=[]
 
-variable_tested = [0.1,0.01,0.001]
+variable_tested = [0.001,0.01,0.1,0.2,0.5]
 
-meta_timestr = time.strftime("%Y%m%d-%H")
+timestr = time.strftime("%Y%m%d-%H")
+log_dir = '../models/' + timestr + '/'
+
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
 
 for it,var in enumerate(variable_tested):
     clear_output()
     print 'ITERATION #', it
-    
-    timestr = time.strftime("%Y%m%d-%H%M")
-    log_dir = '../tmp/'+timestr+'/'
-
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
 
     #num_scales=int(it/3)+1
     num_scales=1
@@ -31,11 +30,11 @@ for it,var in enumerate(variable_tested):
     pool_size=3
     weight_decay=var
     keep_prob=0.8
-
     n_epoch=100
+
+    NN_id="Weight_decay_"+str(var)
     
     reset_graph()
-
     f='../data/amino_acid_genotypes_to_brightness.txt'
     batch_size,zero_sample_fraction = 100, 0.5
 
@@ -44,14 +43,16 @@ for it,var in enumerate(variable_tested):
     nn_instance = ResNet(input_data, num_scales, block_repeats, NN_name, mode,
                      kernel_size, pool_size, weight_decay, keep_prob, n_epoch)
     
-    train_mse_hist, val_mse_hist = train_NN(nn_instance, input_data, 20, log_dir)
+    train_mse_hist, val_mse_hist = train_NN(nn_instance, input_data, 20, log_dir, NN_id)
     
     mse_train.append(train_mse_hist[-1])
     mse_val.append(val_mse_hist[-1])
-    
+
+    ######CREATING THE TEST SET IN THE FIRST ITERATION######
+
     if it==0:
         print 'Generating data for prediction'
-        
+
         wt_sq = 'MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTLSYGVQCFSRYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIKVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSALSKDPNEKRDHMVLLEFVTAAGITHGMDELYK'
         unique_mutations = []
         for mut in input_data.mutant_list:
@@ -72,7 +73,6 @@ for it,var in enumerate(variable_tested):
             unfolded_df[aa] = np.zeros((len(sq_test_set), len(wt_sq)))
 
         #filling the binary matrices, corresponding to 20 different amino acids within the unfoded_df dict
-
         for ind,mutant in enumerate(sq_test_set):
             for pos,mut in enumerate(mutant):
                 unfolded_df[mut][ind, pos] = 1.  
@@ -82,7 +82,9 @@ for it,var in enumerate(variable_tested):
 
         #putting the channel info (amino acids) to the end
         input_df = np.swapaxes(input_df,-1,-2)
-    
+
+    ############
+
     print 'Deleting input data'
     del input_data
     
@@ -104,4 +106,4 @@ for it,var in enumerate(variable_tested):
     # np.save('../tmp/'+meta_timestr+'_predictions.npy',recording_predictions)
 
 results=pd.DataFrame([mse_train,mse_val],columns=variable_tested,index=['Train','Test'])
-results.to_csv('../tmp/'+meta_timestr+'_mse_recorded.txt',sep='\t')
+results.to_csv('../tmp/'+timestr+'_mse_recorded.txt',sep='\t')
