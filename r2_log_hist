@@ -1,0 +1,86 @@
+Wed Apr 11 11:54:29 2018       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 375.82                 Driver Version: 375.82                    |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  GeForce GTX 108...  Off  | 0000:02:00.0     Off |                  N/A |
+| 21%   29C    P8     9W / 250W |      0MiB / 11172MiB |      0%   E. Process |
++-------------------------------+----------------------+----------------------+
+|   1  GeForce GTX 108...  Off  | 0000:03:00.0     Off |                  N/A |
+| 21%   29C    P8     9W / 250W |      0MiB / 11172MiB |      0%   E. Process |
++-------------------------------+----------------------+----------------------+
+|   2  GeForce GTX 108...  Off  | 0000:83:00.0     Off |                  N/A |
+| 21%   30C    P8    15W / 250W |      0MiB / 11172MiB |      0%   E. Process |
++-------------------------------+----------------------+----------------------+
+|   3  GeForce GTX 108...  Off  | 0000:84:00.0     Off |                  N/A |
+| 21%   30C    P8    10W / 250W |      0MiB / 11172MiB |      0%   E. Process |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID  Type  Process name                               Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+
+cpu_bind=MASK - gpu119, task  0  0 [16165]: mask 0x300003 set
+/usr/lib/python2.7/dist-packages/matplotlib/__init__.py:1403: UserWarning:  This call to matplotlib.use() has no effect
+because the backend has already been chosen;
+matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+or matplotlib.backends is imported for the first time.
+
+  warnings.warn(_use_error_msg)
+[2K/nfs/scistore08/kondrgrp/eputints/Jupyter/mut_predictions/ensemble/scripts/functions.py:87: FutureWarning: reshape is deprecated and will raise in a subsequent release. Please use .values.reshape(...) instead
+  labels=labels.reshape(-1,1)
+/nfs/scistore08/kondrgrp/eputints/Jupyter/mut_predictions/ensemble/scripts/functions.py:90: FutureWarning: reshape is deprecated and will raise in a subsequent release. Please use .values.reshape(...) instead
+  sample_weights=sample_weights.reshape(-1,1)
+/nfs/scistore08/kondrgrp/eputints/.local/lib/python2.7/site-packages/sklearn/model_selection/_split.py:2010: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
+  FutureWarning)
+[2KITERATION # 0
+Initializing NN
+Epoch #			Train MSE		Test MSE
+0			3.27			2.88
+10			1.52			1.18
+20			0.99			0.83
+30			0.69			0.76
+40			0.57			0.45
+50			0.52			0.44
+60			0.48			0.42
+70			0.47			0.37
+80			0.43			0.40
+Generating data for prediction
+Deleting input data
+Restoring session for prediction
+Writing results to file
+[2K[2KITERATION # 1
+Initializing NN
+Epoch #			Train MSE		Test MSE
+0			3.26			2.92
+10			1.54			1.18
+20			0.98			0.84
+30			0.70			0.79
+40			0.57			0.47
+50			0.53			0.45
+60			0.49			0.42
+70			0.47			0.37
+80			0.44			0.38
+Deleting input data
+Restoring session for prediction
+Writing results to file
+[2K[2KITERATION # 2
+Initializing NN
+Epoch #			Train MSE		Test MSE
+0			3.28			3.00
+10			1.54			1.19
+20			0.99			0.83
+30			0.71			0.76
+40			0.56			0.46
+50			0.52			0.44
+60			0.48			0.43
+70			0.47			0.37
+80			0.44			0.38
+Deleting input data
+Restoring session for prediction
+Writing results to file
