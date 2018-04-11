@@ -9,9 +9,9 @@ num_iter=3
 mse_train=[]
 mse_val=[]
 
-variable_tested = [0.001,0.01,0.1,0.2,0.5]
+variable_tested = [50,60,70,80,90,100]
 
-timestr = time.strftime("%Y%m%d-%H")
+timestr = time.strftime("%Y%m%d-%H%M")
 log_dir = '../models/' + timestr + '/'
 
 if not os.path.exists(log_dir):
@@ -28,11 +28,11 @@ for it,var in enumerate(variable_tested):
     mode='gpu'
     kernel_size=3
     pool_size=3
-    weight_decay=var
-    keep_prob=0.8
+    weight_decay=0.1
+    keep_prob=var
     n_epoch=100
 
-    NN_id="Weight_decay_"+str(var)
+    NN_id="Dropout_rate_"+str(var)
     
     reset_graph()
     f='../data/amino_acid_genotypes_to_brightness.txt'
@@ -92,7 +92,7 @@ for it,var in enumerate(variable_tested):
     # with tf.Session() as sess:
     #
     #     saver = tf.train.Saver()
-    #     saver.restore(sess, log_dir+"model.ckpt")
+    #     saver.restore(sess, log_dir+"model_"+NN_id+".ckpt")
     #     predictions_test = sess.run(nn_instance.preds_val,{nn_instance.x_val_ph:input_df})
     #
     # if it==0:
@@ -103,7 +103,7 @@ for it,var in enumerate(variable_tested):
     #         recording_predictions[i,it]=1
     #
     # print 'Writing results to file'
-    # np.save('../tmp/'+meta_timestr+'_predictions.npy',recording_predictions)
+    # np.save('../tmp/'+timestr+'_predictions.npy',recording_predictions)
 
 results=pd.DataFrame([mse_train,mse_val],columns=variable_tested,index=['Train','Test'])
-results.to_csv('../tmp/'+timestr+'_mse_recorded.txt',sep='\t')
+results.to_csv('../tmp/'+timestr+'_'+NN_id+'_mse_recorded.txt',sep='\t')
