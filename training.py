@@ -86,22 +86,22 @@ for it,var in enumerate(variable_tested):
     print 'Deleting input data'
     del input_data
     
-    print 'Restoring session for prediction'
-    with tf.Session() as sess:
-    
-        saver = tf.train.Saver()
-        saver.restore(sess, log_dir+"model.ckpt")
-        predictions_test = sess.run(nn_instance.preds_val,{nn_instance.x_val_ph:input_df})
-        
-    if it==0:
-        recording_predictions = np.zeros(shape=[len(input_df), len(variable_tested)])
-        
-    for i,val in enumerate(predictions_test):
-        if val[0] > 3.72:
-            recording_predictions[i,it]=1
-            
-    print 'Writing results to file'
-    np.save('../tmp/'+meta_timestr+'_predictions.npy',recording_predictions)
+    # print 'Restoring session for prediction'
+    # with tf.Session() as sess:
+    #
+    #     saver = tf.train.Saver()
+    #     saver.restore(sess, log_dir+"model.ckpt")
+    #     predictions_test = sess.run(nn_instance.preds_val,{nn_instance.x_val_ph:input_df})
+    #
+    # if it==0:
+    #     recording_predictions = np.zeros(shape=[len(input_df), len(variable_tested)])
+    #
+    # for i,val in enumerate(predictions_test):
+    #     if val[0] > 3.72:
+    #         recording_predictions[i,it]=1
+    #
+    # print 'Writing results to file'
+    # np.save('../tmp/'+meta_timestr+'_predictions.npy',recording_predictions)
 
 results=pd.DataFrame([mse_train,mse_val],columns=variable_tested,index=['Train','Test'])
 results.to_csv('../tmp/'+meta_timestr+'_mse_recorded.txt',sep='\t')
