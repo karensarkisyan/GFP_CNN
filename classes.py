@@ -1,6 +1,6 @@
 from functions import *
 from sklearn.model_selection import train_test_split
-from tf.contrib.framework import add_arg_scope
+from tensorflow.contrib.framework import add_arg_scope
 
 class Data():
     
