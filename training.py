@@ -17,8 +17,12 @@ log_dir = '../models/' + timestr + '/'
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
+f='../data/amino_acid_genotypes_to_brightness.txt'
+batch_size,zero_sample_fraction = 100, 0.5
+input_data = Data(file_path=f,batch_size=batch_size,zero_sample_fraction=zero_sample_fraction, zeroing=True)
+
 for it,var in enumerate(variable_tested):
-    clear_output()
+
     print 'ITERATION #', it
 
     #num_scales=int(it/3)+1
@@ -35,10 +39,6 @@ for it,var in enumerate(variable_tested):
     NN_id="Dropout_rate_"+str(var)
     
     reset_graph()
-    f='../data/amino_acid_genotypes_to_brightness.txt'
-    batch_size,zero_sample_fraction = 100, 0.5
-
-    input_data = Data(file_path=f,batch_size=batch_size,zero_sample_fraction=zero_sample_fraction, zeroing=True)
     
     nn_instance = ResNet(input_data, num_scales, block_repeats, NN_name, mode,
                      kernel_size, pool_size, weight_decay, keep_prob, n_epoch)
@@ -50,43 +50,43 @@ for it,var in enumerate(variable_tested):
 
     ######CREATING THE TEST SET IN THE FIRST ITERATION######
 
-    if it==0:
-        print 'Generating data for prediction'
-
-        wt_sq = 'MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTLSYGVQCFSRYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIKVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSALSKDPNEKRDHMVLLEFVTAAGITHGMDELYK'
-        unique_mutations = []
-        for mut in input_data.mutant_list:
-            unique_mutations.extend(mut)
-
-        unique_mutations = [[x] for x in set(unique_mutations)]
-        
-        #start the list with a wild-type
-        sq_test_set = [wt_sq]
-
-        for mutant in unique_mutations:
-            sq_test_set.append(make_mutant_sq(wt_sq, mutant))
-            
-        #creating the initial 0-filled carcas of unfolded versions of sqs, which will be further turned into binary matricies of shape 238 by 20 (aas)
-        unfolded_df = OrderedDict()
-
-        for aa in set([item[-1] for sublist in unique_mutations for item in sublist]):
-            unfolded_df[aa] = np.zeros((len(sq_test_set), len(wt_sq)))
-
-        #filling the binary matrices, corresponding to 20 different amino acids within the unfoded_df dict
-        for ind,mutant in enumerate(sq_test_set):
-            for pos,mut in enumerate(mutant):
-                unfolded_df[mut][ind, pos] = 1.  
-                
-        #stacking all the amino acids into one np array
-        input_df = np.stack(unfolded_df.values(),axis=1)
-
-        #putting the channel info (amino acids) to the end
-        input_df = np.swapaxes(input_df,-1,-2)
+    # if it==0:
+    #     print 'Generating data for prediction'
+    #
+    #     wt_sq = 'MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTLSYGVQCFSRYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIKVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSALSKDPNEKRDHMVLLEFVTAAGITHGMDELYK'
+    #     unique_mutations = []
+    #     for mut in input_data.mutant_list:
+    #         unique_mutations.extend(mut)
+    #
+    #     unique_mutations = [[x] for x in set(unique_mutations)]
+    #
+    #     #start the list with a wild-type
+    #     sq_test_set = [wt_sq]
+    #
+    #     for mutant in unique_mutations:
+    #         sq_test_set.append(make_mutant_sq(wt_sq, mutant))
+    #
+    #     #creating the initial 0-filled carcas of unfolded versions of sqs, which will be further turned into binary matricies of shape 238 by 20 (aas)
+    #     unfolded_df = OrderedDict()
+    #
+    #     for aa in set([item[-1] for sublist in unique_mutations for item in sublist]):
+    #         unfolded_df[aa] = np.zeros((len(sq_test_set), len(wt_sq)))
+    #
+    #     #filling the binary matrices, corresponding to 20 different amino acids within the unfoded_df dict
+    #     for ind,mutant in enumerate(sq_test_set):
+    #         for pos,mut in enumerate(mutant):
+    #             unfolded_df[mut][ind, pos] = 1.
+    #
+    #     #stacking all the amino acids into one np array
+    #     input_df = np.stack(unfolded_df.values(),axis=1)
+    #
+    #     #putting the channel info (amino acids) to the end
+    #     input_df = np.swapaxes(input_df,-1,-2)
 
     ############
-
-    print 'Deleting input data'
-    del input_data
+    #
+    # print 'Deleting input data'
+    # del input_data
     
     # print 'Restoring session for prediction'
     # with tf.Session() as sess:
