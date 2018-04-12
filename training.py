@@ -9,7 +9,7 @@ num_iter=3
 mse_train=[]
 mse_val=[]
 
-variable_tested = [50,60,70,80,90,100]
+variable_tested = [0.5,0.6,0.7,0.8,0.9,1]
 
 timestr = time.strftime("%Y%m%d-%H%M")
 log_dir = '../models/' + timestr + '/'
