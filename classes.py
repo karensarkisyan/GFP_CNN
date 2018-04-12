@@ -1,14 +1,5 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
 from functions import *
-
-
-# In[13]:
-
+from sklearn.model_selection import train_test_split
 
 class Data():
     
