@@ -100,7 +100,7 @@ class ResNet(object):
 
                 with arg_scope([conv], reuse=True):
                     with arg_scope([dense],reuse=True):
-                        with arg_scope([residual_block], keep_prob=1):
+                        with arg_scope([residual_block]):
                             with arg_scope([bn], training=False, reuse=True):
                                 self.preds_val = ResNet_architecture(self, self.x_val_ph, 
                                                                    kernel_size, pool_size, 
