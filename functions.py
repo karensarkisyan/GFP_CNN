@@ -4,10 +4,6 @@ import tensorflow as tf
 import os
 from tensorflow.contrib.framework.python.ops import add_arg_scope
 
-
-# In[4]:
-
-
 def make_mutant_sq(wt_sq, mutation_list):
     """Having a wt sequence and a list of mutations, this function combines the two into a full mutant sequence."""
     
@@ -18,9 +14,6 @@ def make_mutant_sq(wt_sq, mutation_list):
         mutant_sq[int(mutation[1:-1])+1] = mutation[-1]
         
     return ''.join(mutant_sq)
-
-
-# In[5]:
 
 
 def convert_mutants_to_arrays(f):
@@ -99,24 +92,6 @@ def load_data(f, add_dist=False, dist_file='/nfs/scistore08/kondrgrp/eputints/Ju
         return initial_df, input_df, mutant_list, labels, sample_weights
 
 
-# In[10]:
-
-
-# Extracting datasets to np (scipy) arrays
-
-# import scipy.sparse
-
-# for aa in unfolded_df:
-#     print aa
-#     sparse=scipy.sparse.csc_matrix(unfolded_df[aa])
-#     scipy.sparse.save_npz('arrays/'+aa+'.npz', sparse)
-    
-# np.save('brightness.npy', labels)
-
-
-# In[ ]:
-
-
 xavier = tf.contrib.layers.xavier_initializer
 l2_reg = tf.contrib.layers.l2_regularizer
 bn = add_arg_scope(tf.layers.batch_normalization)
@@ -144,9 +119,6 @@ def residual_block(a, kernel_size, weight_decay):
             name='conv_second_rb')
 
     return a + b
-
-
-# In[ ]:
 
 
 @add_arg_scope
@@ -188,18 +160,12 @@ def ResNet_architecture(net, x, kernel_size, pool_size, weight_decay, keep_prob)
     return temp
 
 
-# In[ ]:
-
-
 def epoch_iterator(n, k):
     
     perm = np.random.permutation(n)
     
     for i in range(n / k):
-        yield perm[i * k:(i + 1) * k]    
-
-
-# In[ ]:
+        yield perm[i * k:(i + 1) * k]
 
 
 def epoch_iterator_balanced(n, batch_size, zero_share, zero_inds, nonzero_inds):
