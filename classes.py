@@ -91,7 +91,7 @@ class ResNet(object):
 
             with tf.device('/%s:0' % mode):
                 with arg_scope([conv]):
-                    with arg_scope([residual_block], keep_prob=keep_prob):
+                    with arg_scope([residual_block]):
                         with arg_scope([bn], training=True):
                             with arg_scope([dense]):
                                 self.preds_train = ResNet_architecture(self, self.x_train_ph, 
