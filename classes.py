@@ -30,10 +30,6 @@ class Data():
         plt.figure(figsize=[10,8])
         plt.hist(self.labels,bins=100,color='k',alpha=0.5)
 
-
-# In[10]:
-
-
 class ResNet(object):
     
     @add_arg_scope

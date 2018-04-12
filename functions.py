@@ -9,7 +9,7 @@ from tensorflow.contrib.framework.python.ops import add_arg_scope
 
 
 def make_mutant_sq(wt_sq, mutation_list):
-    '''Having a wt sequence and a list of mutations, this function combines the two into a full mutant sequence.'''
+    """Having a wt sequence and a list of mutations, this function combines the two into a full mutant sequence."""
     
     mutant_sq = list(wt_sq)
     for mutation in mutation_list:
@@ -63,11 +63,7 @@ def convert_mutants_to_arrays(f):
     return initial_df, input_df, mutant_list
 
 
-# In[1]:
-
-
-def load_data(f, add_dist=False, dist_file='/nfs/scistore08/kondrgrp/eputints/Jupyter/mut_predictions/distances_to_chromophore.txt',
-             scale=False):
+def load_data(f, add_dist=False, dist_file='/nfs/scistore08/kondrgrp/eputints/Jupyter/mut_predictions/distances_to_chromophore.txt'):
     
     initial_df, input_df, mutant_list = convert_mutants_to_arrays(f)
     
@@ -77,7 +73,7 @@ def load_data(f, add_dist=False, dist_file='/nfs/scistore08/kondrgrp/eputints/Ju
     sample_weights = initial_df.uniqueBarcodes
     sample_weights=sample_weights.reshape(-1,1)
     
-    if add_dist == True:
+    if add_dist:
         
         dists = pd.DataFrame.from_csv(dist_file,sep='\t')
         dists.columns=['Distance']
@@ -128,10 +124,9 @@ dense = add_arg_scope(tf.layers.dense)
 conv = add_arg_scope(tf.layers.conv1d)
 max_pool = add_arg_scope(tf.layers.max_pooling1d)
 avg_pool = add_arg_scope(tf.layers.average_pooling1d)
-dense = add_arg_scope(tf.layers.dense) 
 
 @add_arg_scope
-def residual_block(a, kernel_size, weight_decay, keep_prob=1):
+def residual_block(a, kernel_size, weight_decay):
 
     filters = a.get_shape().as_list()[-1]
 
@@ -227,8 +222,8 @@ def reset_graph(seed=8):
 
 def train_NN(nn_instance, input_data, patience, log_dir, NN_id, save_model=True):
     
-    print 'Initializing NN'
-    
+    print('Initializing NN')
+
     with tf.Session() as sess:
     
         saver = tf.train.Saver()
@@ -236,8 +231,8 @@ def train_NN(nn_instance, input_data, patience, log_dir, NN_id, save_model=True)
         sess.run(nn_instance.init)
         train_mse_hist=[]
         val_mse_hist=[]
-        print 'Epoch #\t\t\tTrain MSE\t\tTest MSE'
-        
+        print('Epoch #\t\t\tTrain MSE\t\tTest MSE')
+
         for epoch in range(nn_instance.n_epoch):
 
             temp_train_mse = []
@@ -277,8 +272,7 @@ def train_NN(nn_instance, input_data, patience, log_dir, NN_id, save_model=True)
                 if save_model:
                     saver.save(sess, os.path.join(log_dir, "model_"+NN_id+".ckpt"))
 
-                print '%d\t\t\t%.2f\t\t\t%.2f' % (epoch, np.median(temp_train_mse), np.median(temp_val_mse))
-
+                print('%d\t\t\t%.2f\t\t\t%.2f' % (epoch, np.median(temp_train_mse), np.median(temp_val_mse)))
 
             #EARLY STOPPING
             if epoch%patience==0 and epoch!=0:

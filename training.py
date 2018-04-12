@@ -9,7 +9,7 @@ num_iter=3
 mse_train=[]
 mse_val=[]
 
-variable_tested = [0.5,0.6,0.7,0.8,0.9,1]
+variable_tested = [0.01,0.1,0.2,0.3,0.4,0.5]
 
 timestr = time.strftime("%Y%m%d-%H%M")
 log_dir = '../models/' + timestr + '/'
@@ -23,7 +23,7 @@ input_data = Data(file_path=f,batch_size=batch_size,zero_sample_fraction=zero_sa
 
 for it,var in enumerate(variable_tested):
 
-    print 'ITERATION #', it
+    print('ITERATION #', it)
 
     #num_scales=int(it/3)+1
     num_scales=1
@@ -32,11 +32,11 @@ for it,var in enumerate(variable_tested):
     mode='gpu'
     kernel_size=3
     pool_size=3
-    weight_decay=0.1
-    keep_prob=var
+    weight_decay=var
+    keep_prob=0.8
     n_epoch=100
 
-    NN_id="Dropout_rate_"+str(var)
+    NN_id="Weight_decay_"+str(var)
     
     reset_graph()
     
@@ -106,4 +106,4 @@ for it,var in enumerate(variable_tested):
     # np.save('../tmp/'+timestr+'_predictions.npy',recording_predictions)
 
 results=pd.DataFrame([mse_train,mse_val],columns=variable_tested,index=['Train','Test'])
-results.to_csv('../tmp/'+timestr+'_'+NN_id+'_mse_recorded.txt',sep='\t')
+results.to_csv('../tmp/'+timestr+'_'+'_mse.txt',sep='\t')
