@@ -8,7 +8,7 @@ num_iter = 3
 mse_train = []
 mse_val = []
 
-variable_tested = [0.01, 0.1, 0.2, 0.3, 0.4, 0.5]
+variable_tested = [0.2,0.22,0.25,0.28,0.3]
 
 timestr = time.strftime("%Y%m%d-%H%M")
 log_dir = '../models/' + timestr + '/'
@@ -35,7 +35,7 @@ for it, var in enumerate(variable_tested):
     keep_prob = 0.8
     n_epoch = 100
 
-    NN_id = "Weight_decay_" + str(var)
+    NN_id = "Weight_decay_tuning_" + str(var)
 
     reset_graph()
 
@@ -70,4 +70,4 @@ for it, var in enumerate(variable_tested):
     # np.save('../tmp/' + timestr + '_predictions.npy', recording_predictions)
 
 results = pd.DataFrame([mse_train, mse_val], columns=variable_tested, index=['Train', 'Test'])
-results.to_csv('../tmp/' + timestr + '_' + '_mse.txt', sep='\t')
+results.to_csv('../tmp/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1])+'_mse.txt', sep='\t')

@@ -1,4 +1,4 @@
-Wed Apr 11 15:18:40 2018       
+Fri Apr 13 11:19:59 2018       
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 375.82                 Driver Version: 375.82                    |
 |-------------------------------+----------------------+----------------------+
@@ -6,77 +6,23 @@ Wed Apr 11 15:18:40 2018
 | Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
 |===============================+======================+======================|
 |   0  GeForce GTX 108...  Off  | 0000:02:00.0     Off |                  N/A |
-| 21%   30C    P8     9W / 250W |      0MiB / 11172MiB |      0%   E. Process |
+| 67%   82C    P2   179W / 250W |    543MiB / 11172MiB |    100%   E. Process |
 +-------------------------------+----------------------+----------------------+
 |   1  GeForce GTX 108...  Off  | 0000:03:00.0     Off |                  N/A |
-| 21%   29C    P8     8W / 250W |      0MiB / 11172MiB |      0%   E. Process |
+| 69%   84C    P2   197W / 250W |    543MiB / 11172MiB |    100%   E. Process |
 +-------------------------------+----------------------+----------------------+
 |   2  GeForce GTX 108...  Off  | 0000:83:00.0     Off |                  N/A |
-| 21%   30C    P8    10W / 250W |      0MiB / 11172MiB |      0%   E. Process |
+| 69%   83C    P2   225W / 250W |    543MiB / 11172MiB |    100%   E. Process |
 +-------------------------------+----------------------+----------------------+
 |   3  GeForce GTX 108...  Off  | 0000:84:00.0     Off |                  N/A |
-| 21%   30C    P8    10W / 250W |      0MiB / 11172MiB |      0%   E. Process |
+| 24%   43C    P8    17W / 250W |      0MiB / 11172MiB |      0%   E. Process |
 +-------------------------------+----------------------+----------------------+
                                                                                
 +-----------------------------------------------------------------------------+
 | Processes:                                                       GPU Memory |
 |  GPU       PID  Type  Process name                               Usage      |
 |=============================================================================|
-|  No running processes found                                                 |
+|    0     32504    C   ...2/hofgrp/glemoult/CudaPipe_D=1/./CudaPipe   541MiB |
+|    1     32465    C   ...2/hofgrp/glemoult/CudaPipe_D=1/./CudaPipe   541MiB |
+|    2     32483    C   ...2/hofgrp/glemoult/CudaPipe_D=1/./CudaPipe   541MiB |
 +-----------------------------------------------------------------------------+
-
-cpu_bind=MASK - gpu119, task  0  0 [24217]: mask 0x300003 set
-/usr/lib/python2.7/dist-packages/matplotlib/__init__.py:1403: UserWarning:  This call to matplotlib.use() has no effect
-because the backend has already been chosen;
-matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
-or matplotlib.backends is imported for the first time.
-
-  warnings.warn(_use_error_msg)
-[2K/nfs/scistore08/kondrgrp/eputints/Jupyter/mut_predictions/ensemble/scripts/functions.py:81: FutureWarning: reshape is deprecated and will raise in a subsequent release. Please use .values.reshape(...) instead
-  labels=labels.reshape(-1,1)
-/nfs/scistore08/kondrgrp/eputints/Jupyter/mut_predictions/ensemble/scripts/functions.py:84: FutureWarning: reshape is deprecated and will raise in a subsequent release. Please use .values.reshape(...) instead
-  sample_weights=sample_weights.reshape(-1,1)
-/nfs/scistore08/kondrgrp/eputints/.local/lib/python2.7/site-packages/sklearn/model_selection/_split.py:2010: FutureWarning: From version 0.21, test_size will always complement train_size unless both are specified.
-  FutureWarning)
-[2KITERATION # 0
-Initializing NN
-Epoch #			Train MSE		Test MSE
-0			3.00			2.88
-10			1.20			1.08
-20			0.69			0.66
-30			0.46			0.41
-40			0.37			0.32
-50			0.34			0.30
-60			0.31			0.26
-70			0.29			0.25
-80			0.27			0.25
-Generating data for prediction
-Deleting input data
-Restoring session for prediction
-Writing results to file
-[2K[2KITERATION # 1
-Initializing NN
-Epoch #			Train MSE		Test MSE
-0			2.97			2.87
-10			1.19			0.96
-20			0.78			0.71
-30			0.56			0.56
-40			0.47			0.39
-50			0.45			0.38
-60			0.41			0.39
-Deleting input data
-Restoring session for prediction
-Writing results to file
-[2K[2KITERATION # 2
-Initializing NN
-Epoch #			Train MSE		Test MSE
-0			3.00			2.90
-10			1.18			0.99
-20			0.78			0.82
-30			0.59			0.79
-40			0.50			0.57
-50			0.47			0.64
-60			0.44			0.63
-Deleting input data
-Restoring session for prediction
-Writing results to file
