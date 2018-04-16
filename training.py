@@ -8,7 +8,7 @@ num_iter = 3
 mse_train = []
 mse_val = []
 
-variable_tested = [0.2,0.22,0.25,0.28,0.3]
+variable_tested = [1,2,3,4,5]
 
 timestr = time.strftime("%Y%m%d-%H%M")
 log_dir = '../models/' + timestr + '/'
@@ -25,17 +25,17 @@ for it, var in enumerate(variable_tested):
     print('ITERATION #', it)
 
     # num_scales=int(it/3)+1
-    num_scales = 1
-    block_repeats = 3
+    num_scales = var
+    block_repeats = 8
     NN_name = 'ResNet'
     mode = 'gpu'
     kernel_size = 3
     pool_size = 3
-    weight_decay = var
+    weight_decay = 0.1
     keep_prob = 0.8
     n_epoch = 100
 
-    NN_id = "Weight_decay_tuning_" + str(var)
+    NN_id = "Scale_" + str(var)
 
     reset_graph()
 
