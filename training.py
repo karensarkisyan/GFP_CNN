@@ -74,5 +74,5 @@ for it, var in enumerate(product(variable_tested, variable_tested)):
     # print('Writing results to file')
     # np.save('../tmp/' + timestr + '_predictions.npy', recording_predictions)
 
-results = pd.DataFrame([mse_train, mse_val], columns=variable_tested, index=['Train', 'Test'])
+results = pd.DataFrame([mse_train, mse_val], columns=list(product(variable_tested, variable_tested)), index=['Train', 'Test'])
 results.to_csv('../tmp/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1]) + '_mse.txt', sep='\t')
