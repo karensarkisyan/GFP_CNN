@@ -37,6 +37,7 @@
 #
 #Define the GPU architecture (GTX980 in the example, other options are GTX1080Ti, K40)
 ##SBATCH --constraint=GTX980
+#SBATCH --array=0-2
 #Do not export the local environment to the compute nodes
 #SBATCH --export=NONE
 unset SLURM_EXPORT_ENV
@@ -52,5 +53,5 @@ module load tensorflow/python-2.7/1.3.0
 echo $SLURM_ARRAY_TASK_ID
 #Set the number of threads to the SLURM internal variable
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
-srun --cpu_bind=verbose python ./training.py
+srun --cpu_bind=verbose python ./training.py -n $SLURM_ARRAY_TASK_ID
 

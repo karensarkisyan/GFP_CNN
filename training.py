@@ -1,6 +1,7 @@
 from classes import *
 import time
 import matplotlib
+from optparse import OptionParser
 
 matplotlib.use('Agg')
 from itertools import product
@@ -10,7 +11,22 @@ num_iter = 3
 mse_train = []
 mse_val = []
 
-variable_tested = [1, 2, 3, 4, 5]
+parser = OptionParser()
+parser.add_option("-n", "--n_of_scale_block_combination", type="int",
+                  help="Scale/block combination choice",
+                  dest="n_of_scale_block_combination")
+
+(options, args) = parser.parse_args()
+
+n = options.n_of_scale_block_combination
+num_scales, block_repeats = choose_scales_blocks_combination(n)
+mode = 'gpu'
+n_epoch = 100
+kernel_size = 3
+pool_size = 3
+
+variable_tested_1 = [0, 0.1, 0.2, 0.3, 0.4]
+variable_tested_2 = [0.1*x for x in range(5, 11)]
 
 timestr = time.strftime("%Y%m%d-%H%M")
 log_dir = '../models/' + timestr + '/'
@@ -22,21 +38,15 @@ f = '../data/amino_acid_genotypes_to_brightness.txt'
 batch_size, zero_sample_fraction = 100, 0.5
 input_data = Data(file_path=f, batch_size=batch_size, zero_sample_fraction=zero_sample_fraction, zeroing=True)
 
-for it, var in enumerate(product(variable_tested, variable_tested)):
+for it, var in enumerate(product(variable_tested_1, variable_tested_2)):
 
     print('ITERATION #', it)
 
-    num_scales = var[0]
-    block_repeats = var[1]
-    NN_name = 'ResNet'
-    mode = 'gpu'
-    kernel_size = 3
-    pool_size = 3
-    weight_decay = 0.1
-    keep_prob = 0.8
-    n_epoch = 100
+    NN_name = 'ResNet'+str(num_scales)+'_'+str(batch_size)
+    weight_decay = var[0]
+    keep_prob = var[1]
 
-    NN_id = "Scale_block_grid_" + str(var)
+    NN_id = "S%dB%d_WD%.2f_DO%.2f" % (num_scales, block_repeats, weight_decay, keep_prob)
 
     reset_graph()
     try:
@@ -74,5 +84,7 @@ for it, var in enumerate(product(variable_tested, variable_tested)):
     # print('Writing results to file')
     # np.save('../tmp/' + timestr + '_predictions.npy', recording_predictions)
 
-results = pd.DataFrame([mse_train, mse_val], columns=list(product(variable_tested, variable_tested)), index=['Train', 'Test'])
-results.to_csv('../tmp/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1]) + '_mse.txt', sep='\t')
+results = pd.DataFrame([mse_train, mse_val], columns=list(product(variable_tested_1, variable_tested_2)),
+                       index=['Train', 'Test'])
+results.to_csv('../tmp/' + timestr + '_' + '_'.join(
+    NN_id.split('_')[:-1]) + '_mse.txt', sep='\t')

@@ -277,3 +277,8 @@ def make_data_for_prediction(input_data):
     input_df = np.swapaxes(input_df, -1, -2)
 
     return input_df
+
+
+def choose_scales_blocks_combination(n):
+    combinations=[[3,3],[4,3],[5,2]]
+    return combinations[n]
