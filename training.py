@@ -46,7 +46,7 @@ for it, var in enumerate(product(variable_tested_1, variable_tested_2)):
     weight_decay = var[0]
     keep_prob = var[1]
 
-    NN_id = "S%dB%d_WD%.2f_DO%.2f" % (num_scales, block_repeats, weight_decay, keep_prob)
+    NN_id = "S%dB%d_WD%.2fDO%.2f" % (num_scales, block_repeats, weight_decay, keep_prob)
 
     reset_graph()
     try:
