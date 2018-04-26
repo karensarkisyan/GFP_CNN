@@ -279,6 +279,6 @@ def make_data_for_prediction(input_data):
     return input_df
 
 
-def choose_scales_blocks_combination(n):
-    combinations=[[3,3],[4,3],[5,2]]
+def choose_parameters_combination(n):
+    combinations = [[2, 3, 0.1, 0.8], [1, 2, 0.1, 0.8], [3, 3, 0.2, 0.5], [4, 3, 0.1, 0.5], [5, 2, 0.4, 0.5]]
     return combinations[n]
