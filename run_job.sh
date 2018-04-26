@@ -37,7 +37,7 @@
 #
 #Define the GPU architecture (GTX980 in the example, other options are GTX1080Ti, K40)
 ##SBATCH --constraint=GTX980
-##SBATCH --array=0-4
+#SBATCH --array=0-4
 #Do not export the local environment to the compute nodes
 #SBATCH --export=NONE
 unset SLURM_EXPORT_ENV
