@@ -14,6 +14,8 @@ class Data():
         if zeroing:
             self.labels[self.labels < 2.7] = 0
 
+    def train_test_split(self):
+
         self.x_train, self.x_val, self.idx_y_train, self.idx_y_val = train_test_split(self.input_df,
                                                                                       [num for num in
                                                                                        range(len(self.labels))],

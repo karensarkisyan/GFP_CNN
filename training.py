@@ -39,6 +39,8 @@ for it in range(num_iter):
 
     print('ITERATION #', it)
 
+    input_data.train_test_split()
+
     NN_name = 'ResNet'+str(num_scales)+'_'+str(batch_size)
 
     NN_id = "S%dB%d_WD%.2fDO%.2f" % (num_scales, block_repeats, weight_decay, keep_prob)
