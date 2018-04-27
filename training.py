@@ -64,9 +64,6 @@ for it in range(num_iter):
         input_df = make_data_for_prediction(input_data)
         recording_predictions = np.zeros(shape=[len(input_df), num_iter])
 
-    print('Deleting input data')
-    del input_data
-
     print('Restoring session for prediction')
     with tf.Session() as sess:
 
