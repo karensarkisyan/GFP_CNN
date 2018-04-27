@@ -7,7 +7,7 @@ matplotlib.use('Agg')
 from itertools import product
 from matplotlib import pyplot as plt
 
-num_iter = 3
+num_iter = 10
 mse_train = []
 mse_val = []
 
