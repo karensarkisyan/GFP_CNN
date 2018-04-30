@@ -41,7 +41,7 @@ for it in range(num_iter):
 
     input_data.train_test_split()
 
-    NN_name = 'ResNet'+str(num_scales)+'_'+str(batch_size)
+    NN_name = 'ResNet' + str(num_scales) + '_' + str(batch_size)
 
     NN_id = "S%dB%d_WD%.2fDO%.2f" % (num_scales, block_repeats, weight_decay, keep_prob)
 
@@ -69,10 +69,26 @@ for it in range(num_iter):
 
         saver = tf.train.Saver()
         saver.restore(sess, log_dir + "model_" + NN_id + ".ckpt")
+
+        predictions_val = sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: input_data.x_val})
+
+        plt.figure(figsize=[10, 8])
+        plt.hist(input_data.y_val, bins=100, color='k', alpha=0.7)
+        plt.hist(predictions_val, bins=100, color='m', alpha=0.7)
+        plt.plot([3.72] * 2, [0, 100], 'b--')
+        plt.savefig('../figures/histograms/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1]) + '_val_' + str(it)
+                    + '.pdf')
+
         predictions_test = sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: input_df})
 
+        plt.figure(figsize=[10, 8])
+        plt.hist(predictions_test, bins=100, color='k', alpha=0.7)
+        plt.plot([3.72] * 2, [0, 100], 'b--')
+        plt.savefig('../figures/histograms/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1]) + '_singles_' + str(it)
+                    + '.pdf')
+
     for i, val in enumerate(predictions_test):
-        if val[0] > 3.72:
+        if val[0] >= 3.72:
             recording_predictions[i, it] = 1
 
     print('Writing results to file')
