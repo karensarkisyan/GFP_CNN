@@ -7,7 +7,7 @@ matplotlib.use('Agg')
 from itertools import product
 from matplotlib import pyplot as plt
 
-num_iter = 10
+num_iter = 1
 mse_train = []
 mse_val = []
 
@@ -21,7 +21,7 @@ parser.add_option("-n", "--n_of_scale_block_combination", type="int",
 n = options.n_of_scale_block_combination
 num_scales, block_repeats, weight_decay, keep_prob = choose_parameters_combination(n)
 mode = 'gpu'
-n_epoch = 100
+n_epoch = 200
 kernel_size = 3
 pool_size = 3
 
