@@ -4,6 +4,9 @@ import tensorflow as tf
 import os
 from tensorflow.contrib.framework.python.ops import add_arg_scope
 from collections import OrderedDict
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
 
 
 def make_mutant_sq(wt_sq, mutation_list):
@@ -303,7 +306,7 @@ def transform_predictions_uncertainty(predictions):
 
 def visualize_predictions_uncertainty(predictions_summary, timestr, n, val=True):
 
-    if val == True:
+    if val:
         name_suffix = '_val'
     else:
         name_suffix = '_train'
