@@ -42,7 +42,6 @@ for it in range(num_iter):
     input_data.train_test_split()
 
     NN_name = 'ResNet' + str(num_scales) + '_' + str(batch_size)
-
     NN_id = "S%dB%d_WD%.2fDO%.2f" % (num_scales, block_repeats, weight_decay, keep_prob)
 
     reset_graph()
@@ -70,31 +69,33 @@ for it in range(num_iter):
         saver = tf.train.Saver()
         saver.restore(sess, log_dir + "model_" + NN_id + ".ckpt")
 
-        predictions_val = sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: input_data.x_val})
+        predictions_val = [sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: input_data.x_val}) for _ in
+                           range(100)]
 
-        plt.figure(figsize=[10, 8])
-        plt.hist(input_data.y_val, bins=100, color='k', alpha=0.7)
-        plt.hist(predictions_val, bins=100, color='m', alpha=0.7)
-        plt.plot([3.72] * 2, [0, 100], 'b--')
-        plt.savefig('../figures/histograms/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1]) + '_val_' + str(it)
-                    + '.pdf')
+predictions_val = np.array(predictions_val).swapaxes(1, 0)
+predictions_df = pd.DataFrame(index=[x for x in range(100)])
 
-        predictions_test = sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: input_df})
+for i, col in enumerate(predictions_val):
+    predictions_df[i] = col
 
-        plt.figure(figsize=[10, 8])
-        plt.hist(predictions_test, bins=100, color='k', alpha=0.7)
-        plt.plot([3.72] * 2, [0, 100], 'b--')
-        plt.savefig('../figures/histograms/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1]) + '_singles_' + str(it)
-                    + '.pdf')
+predictions_summary = predictions_df.describe()
 
-    for i, val in enumerate(predictions_test):
-        if val[0] >= 3.72:
-            recording_predictions[i, it] = 1
+test1 = predictions_summary[
+    [column for column in predictions_summary.columns if predictions_summary.loc['mean'][column] >= 3.72]]
+test2 = predictions_summary[
+    [column for column in predictions_summary.columns if predictions_summary.loc['mean'][column] < 3.72]]
+plt.figure(figsize=[10, 8])
+plt.hist(test1.loc['std'], bins=10, alpha=0.5, color='k', normed=True, label='Mean >= WT')
+plt.hist(test2.loc['std'], bins=40, alpha=0.5, color='m', normed=True, label='Mean < WT')
+plt.grid('--', lw=0.5)
+plt.legend()
+plt.xlabel('Standard deviations', fontsize=15)
+plt.savefig('../figures/uncertainty/' + timestr + '_' + '_std_hist_' + str(n) + '.pdf')
 
-    print('Writing results to file')
-    np.save('../tmp/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1]) + '_predictions.npy', recording_predictions)
-
-results = pd.DataFrame([mse_train, mse_val], columns=[x for x in range(num_iter)],
-                       index=['Train', 'Test'])
-results.to_csv('../tmp/' + timestr + '_' + '_'.join(
-    NN_id.split('_')[:-1]) + '_mse.txt', sep='\t')
+plt.figure(figsize=[10, 8])
+plt.plot(predictions_summary.loc['std'], predictions_summary.loc['mean'], 'ok', alpha=0.1)
+plt.grid('--', lw=0.5)
+plt.xlabel('Prediction Std', fontsize=15)
+plt.ylabel('Prediction Mean', fontsize=15)
+plt.plot([min(predictions_summary.loc['std']), max(predictions_summary.loc['std'])], [3.72] * 2, '--m')
+plt.savefig('../figures/uncertainty/' + timestr + '_' + '_std_mean_' + str(n) + '.pdf')
