@@ -73,34 +73,11 @@ for it in range(num_iter):
                            range(100)]
 
         x_train_fraction = subsample(2000, input_data.x_train)
-
         predictions_train = [sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: x_train_fraction}) for _ in
                              range(100)]
 
-predictions_val = np.array(predictions_val).swapaxes(1, 0)
-predictions_df = pd.DataFrame(index=[x for x in range(100)])
+predictions_val_summary = transform_predictions_uncertainty(predictions_val)
+predictions_train_summary = transform_predictions_uncertainty(predictions_train)
 
-for i, col in enumerate(predictions_val):
-    predictions_df[i] = col
-
-predictions_summary = predictions_df.describe()
-
-test1 = predictions_summary[
-    [column for column in predictions_summary.columns if predictions_summary.loc['mean'][column] >= 3.72]]
-test2 = predictions_summary[
-    [column for column in predictions_summary.columns if predictions_summary.loc['mean'][column] < 3.72]]
-plt.figure(figsize=[10, 8])
-plt.hist(test1.loc['std'], bins=10, alpha=0.5, color='k', normed=True, label='Mean >= WT')
-plt.hist(test2.loc['std'], bins=40, alpha=0.5, color='m', normed=True, label='Mean < WT')
-plt.grid('--', lw=0.5)
-plt.legend()
-plt.xlabel('Standard deviations', fontsize=15)
-plt.savefig('../figures/uncertainty/' + timestr + '_val_std_hist_' + str(n) + '.pdf')
-
-plt.figure(figsize=[10, 8])
-plt.plot(predictions_summary.loc['std'], predictions_summary.loc['mean'], 'ok', alpha=0.1)
-plt.grid('--', lw=0.5)
-plt.xlabel('Prediction Std', fontsize=15)
-plt.ylabel('Prediction Mean', fontsize=15)
-plt.plot([min(predictions_summary.loc['std']), max(predictions_summary.loc['std'])], [3.72] * 2, '--m')
-plt.savefig('../figures/uncertainty/' + timestr + '_val_std_mean_' + str(n) + '.pdf')
+visualize_predictions_uncertainty(predictions_val_summary, timestr, n, val=True)
+predictions_val_summary(predictions_train_summary, timestr, n, val=False)
