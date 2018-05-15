@@ -282,3 +282,8 @@ def make_data_for_prediction(input_data):
 def choose_parameters_combination(n):
     combinations = [[2, 3, 0.1, 0.5], [1, 2, 0.1, 0.5], [3, 3, 0.2, 0.5], [4, 3, 0.1, 0.5], [5, 2, 0.4, 0.5]]
     return combinations[n]
+
+
+def subsample(n, X):
+    ids = np.random.choice([x for x in range(len(X))], n)
+    return X[ids]
