@@ -69,7 +69,9 @@ for it in range(num_iter):
         saver = tf.train.Saver()
         saver.restore(sess, log_dir + "model_" + NN_id + ".ckpt")
 
-        predictions_val = [sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: input_data.x_val}) for _ in
+        single_mutants = make_data_for_prediction(input_data)
+
+        predictions_val = [sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: single_mutants}) for _ in
                            range(100)]
 
         x_train_fraction = subsample(2000, input_data.x_train)
