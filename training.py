@@ -80,4 +80,4 @@ predictions_val_summary = transform_predictions_uncertainty(predictions_val)
 predictions_train_summary = transform_predictions_uncertainty(predictions_train)
 
 visualize_predictions_uncertainty(predictions_val_summary, timestr, n, val=True)
-predictions_val_summary(predictions_train_summary, timestr, n, val=False)
+visualize_predictions_uncertainty(predictions_train_summary, timestr, n, val=False)
