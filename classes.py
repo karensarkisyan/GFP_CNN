@@ -107,7 +107,7 @@ class ResNet(object):
                             with arg_scope([bn], training=False, reuse=True):
                                 self.preds_val = ResNet_architecture(self, self.x_val_ph,
                                                                      kernel_size, pool_size,
-                                                                     weight_decay, keep_prob=1)
+                                                                     weight_decay, keep_prob)
 
         self.loss = tf.losses.mean_squared_error(self.y_train_ph, self.preds_train)
         self.loss_weighted = tf.reduce_mean(

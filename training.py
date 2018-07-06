@@ -42,7 +42,6 @@ for it in range(num_iter):
     input_data.train_test_split()
 
     NN_name = 'ResNet' + str(num_scales) + '_' + str(batch_size)
-
     NN_id = "S%dB%d_WD%.2fDO%.2f" % (num_scales, block_repeats, weight_decay, keep_prob)
 
     reset_graph()
@@ -70,31 +69,17 @@ for it in range(num_iter):
         saver = tf.train.Saver()
         saver.restore(sess, log_dir + "model_" + NN_id + ".ckpt")
 
-        predictions_val = sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: input_data.x_val})
+        single_mutants = make_data_for_prediction(input_data)
 
-        plt.figure(figsize=[10, 8])
-        plt.hist(input_data.y_val, bins=100, color='k', alpha=0.7)
-        plt.hist(predictions_val, bins=100, color='m', alpha=0.7)
-        plt.plot([3.72] * 2, [0, 100], 'b--')
-        plt.savefig('../figures/histograms/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1]) + '_val_' + str(it)
-                    + '.pdf')
+        predictions_val = [sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: single_mutants}) for _ in
+                           range(100)]
 
-        predictions_test = sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: input_df})
+        x_train_fraction = subsample(2000, input_data.x_train)
+        predictions_train = [sess.run(nn_instance.preds_val, {nn_instance.x_val_ph: x_train_fraction}) for _ in
+                             range(100)]
 
-        plt.figure(figsize=[10, 8])
-        plt.hist(predictions_test, bins=100, color='k', alpha=0.7)
-        plt.plot([3.72] * 2, [0, 100], 'b--')
-        plt.savefig('../figures/histograms/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1]) + '_singles_' + str(it)
-                    + '.pdf')
+predictions_val_summary = transform_predictions_uncertainty(predictions_val)
+predictions_train_summary = transform_predictions_uncertainty(predictions_train)
 
-    for i, val in enumerate(predictions_test):
-        if val[0] >= 3.72:
-            recording_predictions[i, it] = 1
-
-    print('Writing results to file')
-    np.save('../tmp/' + timestr + '_' + '_'.join(NN_id.split('_')[:-1]) + '_predictions.npy', recording_predictions)
-
-results = pd.DataFrame([mse_train, mse_val], columns=[x for x in range(num_iter)],
-                       index=['Train', 'Test'])
-results.to_csv('../tmp/' + timestr + '_' + '_'.join(
-    NN_id.split('_')[:-1]) + '_mse.txt', sep='\t')
+visualize_predictions_uncertainty(predictions_val_summary, timestr, n, val=True)
+visualize_predictions_uncertainty(predictions_train_summary, timestr, n, val=False)

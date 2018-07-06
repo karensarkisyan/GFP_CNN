@@ -4,6 +4,9 @@ import tensorflow as tf
 import os
 from tensorflow.contrib.framework.python.ops import add_arg_scope
 from collections import OrderedDict
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
 
 
 def make_mutant_sq(wt_sq, mutation_list):
@@ -282,3 +285,48 @@ def make_data_for_prediction(input_data):
 def choose_parameters_combination(n):
     combinations = [[2, 3, 0.1, 0.5], [1, 2, 0.1, 0.5], [3, 3, 0.2, 0.5], [4, 3, 0.1, 0.5], [5, 2, 0.4, 0.5]]
     return combinations[n]
+
+
+def subsample(n, X):
+    ids = np.random.choice([x for x in range(len(X))], n)
+    return X[ids]
+
+
+def transform_predictions_uncertainty(predictions):
+    predictions = np.array(predictions).swapaxes(1, 0)
+    predictions_df = pd.DataFrame(index=[x for x in range(100)])
+
+    for i, col in enumerate(predictions):
+        predictions_df[i] = col
+
+    predictions_summary = predictions_df.describe()
+
+    return predictions_summary
+
+
+def visualize_predictions_uncertainty(predictions_summary, timestr, n, val=True):
+
+    if val:
+        name_suffix = '_val'
+    else:
+        name_suffix = '_train'
+
+    test1 = predictions_summary[
+        [column for column in predictions_summary.columns if predictions_summary.loc['mean'][column] >= 3.72]]
+    test2 = predictions_summary[
+        [column for column in predictions_summary.columns if predictions_summary.loc['mean'][column] < 3.72]]
+    plt.figure(figsize=[10, 8])
+    plt.hist(test1.loc['std'], bins=10, alpha=0.5, color='k', normed=True, label='Mean >= WT')
+    plt.hist(test2.loc['std'], bins=40, alpha=0.5, color='m', normed=True, label='Mean < WT')
+    plt.grid('--', lw=0.5)
+    plt.legend()
+    plt.xlabel('Standard deviations', fontsize=15)
+    plt.savefig('../figures/uncertainty/' + timestr + name_suffix + '_std_hist_' + str(n) + '.pdf')
+
+    plt.figure(figsize=[10, 8])
+    plt.plot(predictions_summary.loc['std'], predictions_summary.loc['mean'], 'ok', alpha=0.1)
+    plt.grid('--', lw=0.5)
+    plt.xlabel('Prediction Std', fontsize=15)
+    plt.ylabel('Prediction Mean', fontsize=15)
+    plt.plot([min(predictions_summary.loc['std']), max(predictions_summary.loc['std'])], [3.72] * 2, '--m')
+    plt.savefig('../figures/uncertainty/' + timestr + name_suffix + '_std_mean_' + str(n) + '.pdf')
